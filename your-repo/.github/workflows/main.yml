@@ -28,6 +28,22 @@ jobs:
           sleep 3
 
       - name: Run tests
-        run: npm run test
+        run: |
+          npm test
 
-      - name: Log in to Doc
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          IMAGE_TAG=${{ secrets.IMAGE_NAME }}:${{ github.sha }}
+          docker build -t "$IMAGE_TAG" .
+          docker tag "$IMAGE_TAG" ${{ secrets.IMAGE_NAME }}:latest
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ secrets.IMAGE_NAME }}:latest
