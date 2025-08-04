@@ -13,19 +13,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          cd yourfile
+          npm ci
 
       - name: Run tests
-        run: npm test
+        run: |
+          cd yourfile
+          npm test
 
-      - name: Log in to DockerHub
+      - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -34,7 +38,7 @@ jobs:
       - name: Build Docker image
         run: |
           IMAGE_TAG=${{ secrets.IMAGE_NAME }}:${{ github.sha }}
-          docker build -t "$IMAGE_TAG" .
+          docker build -t "$IMAGE_TAG" yourfile
           docker tag "$IMAGE_TAG" ${{ secrets.IMAGE_NAME }}:latest
 
       - name: Push Docker image
