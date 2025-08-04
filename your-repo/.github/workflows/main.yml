@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+﻿name: CI/CD Pipeline
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
         run: |
           cd app
           npm ci
-          node index.js &    
+          node index.js &
           sleep 3
 
       - name: Run tests
