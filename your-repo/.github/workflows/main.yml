@@ -20,14 +20,10 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: |
-          cd yourfile
-          npm ci
+        run: npm ci
 
       - name: Run tests
-        run: |
-          cd yourfile
-          npm test
+        run: npm test
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
@@ -38,7 +34,7 @@ jobs:
       - name: Build Docker image
         run: |
           IMAGE_TAG=${{ secrets.IMAGE_NAME }}:${{ github.sha }}
-          docker build -t "$IMAGE_TAG" yourfile
+          docker build -t "$IMAGE_TAG" .
           docker tag "$IMAGE_TAG" ${{ secrets.IMAGE_NAME }}:latest
 
       - name: Push Docker image
